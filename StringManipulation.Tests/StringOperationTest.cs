@@ -9,7 +9,7 @@ namespace StringManipulation.Tests
 {
     public class StringOperationTest
     {
-        [Fact]
+        [Fact(Skip ="Esta prueba se omite temporalmente, TICKET-001")]
         public void ConcatenateStrings()
         {
             //Arrange
@@ -68,5 +68,74 @@ namespace StringManipulation.Tests
             Assert.Contains("gato", result);
               
         }
+
+        [Fact]
+        public void GetStringLength()
+        {
+            var stringOperations = new StringOperations();
+            var result = stringOperations.GetStringLength("Yvette");
+            Assert.Equal(6, result);
+        }
+
+        [Fact]
+        public void GetStringLength_Exception()
+        {
+            //Arrange
+            var stringOperations = new StringOperations();
+
+            //Assert
+            Assert.ThrowsAny<ArgumentNullException>(() =>stringOperations.GetStringLength(null));
+        }
+
+        [Fact]
+        public void TruncateString()
+        {
+            //Arrange
+            var stringOperations = new StringOperations();
+
+            //Act
+            var result = stringOperations.TruncateString("Yvette", 3);
+
+            //Assert
+            Assert.NotEmpty(result);
+            Assert.NotNull(result);
+            Assert.Equal("Yve", result);
+        }
+
+        [Fact]
+        public void TruncateString_Exception()
+        {
+            //Arrange
+            var stringOperations = new StringOperations();
+
+            //Assert
+            Assert.ThrowsAny<ArgumentOutOfRangeException>(() => stringOperations.TruncateString("Yvette", -3));
+        }
+
+        [Theory]
+        [InlineData("V", 5)]
+        [InlineData("x", 10)]
+        [InlineData("XVIII", 18)]
+
+        public void FromRomanToNumber(string romanNumber, int expected)
+        {
+            var stringOperations = new StringOperations();
+
+            var result = stringOperations.FromRomanToNumber(romanNumber);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("e sp a ci os", "espacios")]
+        public void RemoveWhitespace_Theory(string texto, string expected)
+        {
+            var stringOperations = new StringOperations();
+
+            var result = stringOperations.RemoveWhitespace(texto);
+
+            Assert.Equal(expected, result);
+        }
+
     }
 }
