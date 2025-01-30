@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Moq;
+using Microsoft.Extensions.Logging;
 
 namespace StringManipulation.Tests
 {
@@ -136,6 +138,34 @@ namespace StringManipulation.Tests
 
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void CountOccurrences()
+        {
+            var mockLogger = new Mock<ILogger<StringOperations>>();
+            var stringOperations = new StringOperations(mockLogger.Object);
+
+            var result = stringOperations.CountOccurrences("Hello Platzi", 'l');
+
+            Assert.Equal(3, result);
+        }
+
+        [Fact]
+        public void ReadFile()
+        {
+            var stringOperations = new StringOperations();
+            var mockFileReader = new Mock<IFileReaderConector>();
+            //mockFileReader.Setup(p=> p.ReadString("file.txt")).Returns("Reading file");
+
+            //esta configuración sirve para que siempre retorne lo mismo para cualquier párámetro (nombre del archivo)
+            mockFileReader.Setup(p => p.ReadString(It.IsAny<string>())).Returns("Reading file");
+
+            var result = stringOperations.ReadFile(mockFileReader.Object, "file2.txt");
+
+            Assert.Equal("Reading file", result);
+
+        }
+
 
     }
 }
